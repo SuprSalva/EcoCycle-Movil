@@ -50,12 +50,12 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/bg_pill_white_alpha">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🔔"
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
                         android:layout_gravity="center"
-                        android:textSize="16sp"/>
+                        app:srcCompat="@drawable/ic_notifications"
+                        app:tint="@color/primary"/>
                 </FrameLayout>
             </RelativeLayout>
 
@@ -105,11 +105,12 @@
                         android:paddingVertical="6dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="📈 "
-                            android:textSize="12sp"/>
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginEnd="4dp"
+                            app:srcCompat="@drawable/ic_trending_up"
+                            app:tint="@color/primary"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -128,11 +129,12 @@
                         android:paddingVertical="6dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="💧 "
-                            android:textSize="12sp"/>
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginEnd="4dp"
+                            app:srcCompat="@drawable/ic_water_drop"
+                            app:tint="@color/primary"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -287,13 +289,12 @@
                         android:layout_height="40dp"
                         android:layout_alignParentStart="true"
                         android:background="@drawable/bg_icon_light_green">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:text="♻"
-                            android:textColor="@color/primary"
-                            android:textSize="20sp"/>
+                            app:srcCompat="@drawable/ic_recycling"
+                            app:tint="@color/primary"/>
                     </FrameLayout>
 
                     <LinearLayout
@@ -350,13 +351,12 @@
                         android:layout_height="40dp"
                         android:layout_alignParentStart="true"
                         android:background="@drawable/bg_icon_error">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:layout_gravity="center"
-                            android:text="☕"
-                            android:textColor="#854F0B"
-                            android:textSize="20sp"/>
+                            app:srcCompat="@drawable/ic_coffee"
+                            app:tint="#854F0B"/>
                     </FrameLayout>
 
                     <LinearLayout

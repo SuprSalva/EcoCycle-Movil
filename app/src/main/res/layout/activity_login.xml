@@ -20,13 +20,12 @@
             android:layout_height="60dp"
             android:background="@drawable/bg_icon_secondary">
             
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="♻"
-                android:textSize="32sp"
-                android:textColor="@color/lightGreen"
-                android:layout_gravity="center" />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_recycling"
+                app:tint="@color/lightGreen" />
         </FrameLayout>
 
         <TextView

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -48,13 +49,13 @@
                     android:textStyle="bold"/>
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="💲"
-                android:textSize="32sp"/>
+                app:srcCompat="@drawable/ic_attach_money"
+                app:tint="@color/primary"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -100,12 +101,12 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/bg_reward_coffee">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_gravity="center"
-                            android:text="☕"
-                            android:textSize="24sp"/>
+                            app:srcCompat="@drawable/ic_coffee"
+                            app:tint="#854F0B"/>
                     </FrameLayout>
 
                     <TextView
@@ -162,12 +163,12 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/bg_reward_discount">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_gravity="center"
-                            android:text="🎫"
-                            android:textSize="24sp"/>
+                            app:srcCompat="@drawable/ic_discount"
+                            app:tint="#185FA5"/>
                     </FrameLayout>
 
                     <TextView
@@ -233,12 +234,12 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/bg_reward_taco">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_gravity="center"
-                            android:text="🌮"
-                            android:textSize="24sp"/>
+                            app:srcCompat="@drawable/ic_fastfood"
+                            app:tint="#854F0B"/>
                     </FrameLayout>
 
                     <TextView
@@ -295,12 +296,12 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:background="@drawable/bg_reward_bag">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_gravity="center"
-                            android:text="🎁"
-                            android:textSize="24sp"/>
+                            app:srcCompat="@drawable/ic_card_giftcard"
+                            app:tint="#1D7C3F"/>
                     </FrameLayout>
 
                     <TextView

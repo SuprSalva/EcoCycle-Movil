@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#0F6E56</color>
+    <color name="secondary">#1D9E75</color>
+    <color name="accent">#5DCAA5</color>
+    <color name="lightGreen">#E1F5EE</color>
+    <color name="paleGreen">#9FE1CB</color>
+    <color name="background">#F9F9F9</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="inputBackground">#F5F5F4</color>
+    <color name="textPrimary">#333333</color>
+    <color name="textSecondary">#888888</color>
+    <color name="textInverse">#FFFFFF</color>
+    <color name="border">#E5E5E3</color>
+    <color name="success">#0F6E56</color>
+    <color name="error">#D85A30</color>
+    <color name="rewardCoffee">#E1F5EE</color>
+    <color name="rewardDiscount">#E6F1FB</color>
+    <color name="rewardTaco">#FAEEDA</color>
+    <color name="rewardBag">#EEEDFE</color>
+</resources>

@@ -39,6 +39,7 @@ private val LightColorScheme = lightColorScheme(
 fun EcoCycleTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = LightColorScheme,
+        typography = Typography,
         content = content
     )
 }

@@ -26,6 +26,10 @@ import com.example.appmovil.ui.screens.DashboardScreen
 import com.example.appmovil.ui.screens.HistorialScreen
 import com.example.appmovil.ui.screens.MenuScreen
 import com.example.appmovil.ui.screens.RecompensasScreen
+import com.example.appmovil.ui.screens.AjustesScreen
+import com.example.appmovil.ui.screens.AyudaScreen
+import com.example.appmovil.ui.screens.TerminosScreen
+import com.example.appmovil.ui.screens.NotificacionesScreen
 
 @Composable
 fun AppNavigation(onLogout: () -> Unit) {
@@ -103,15 +107,41 @@ fun AppNavigation(onLogout: () -> Unit) {
         ) {
             composable("dashboard") { 
                 DashboardScreen(
-                    onViewAllClick = { navController.navigate("historial") }
+                    onViewAllClick = { navController.navigate("historial") },
+                    onNotificationsClick = { navController.navigate("notificaciones") }
                 ) 
             }
-            composable("recompensas") { RecompensasScreen() }
-            composable("menu") { MenuScreen(onLogout) }
+            composable("recompensas") { 
+                RecompensasScreen(
+                    onNotificationsClick = { navController.navigate("notificaciones") }
+                ) 
+            }
+            composable("menu") { 
+                MenuScreen(
+                    onLogout = onLogout,
+                    onAjustesClick = { navController.navigate("ajustes") },
+                    onAyudaClick = { navController.navigate("ayuda") },
+                    onTerminosClick = { navController.navigate("terminos") },
+                    onNotificationsClick = { navController.navigate("notificaciones") }
+                ) 
+            }
             composable("historial") { 
                 HistorialScreen(
-                    onBackClick = { navController.popBackStack() }
+                    onBackClick = { navController.popBackStack() },
+                    onNotificationsClick = { navController.navigate("notificaciones") }
                 ) 
+            }
+            composable("ajustes") {
+                AjustesScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable("ayuda") {
+                AyudaScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable("terminos") {
+                TerminosScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable("notificaciones") {
+                NotificacionesScreen(onBackClick = { navController.popBackStack() })
             }
         }
     }

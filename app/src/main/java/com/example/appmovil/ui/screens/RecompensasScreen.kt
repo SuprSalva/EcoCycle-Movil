@@ -40,7 +40,7 @@ data class RecompensaMock(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecompensasScreen() {
+fun RecompensasScreen(onNotificationsClick: () -> Unit) {
     var recompensas by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<List<RecompensaMock>>(emptyList()) }
     var selectedCategory by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("Todos") }
     var isLoading by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(true) }
@@ -100,7 +100,7 @@ fun RecompensasScreen() {
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onNotificationsClick) {
                         Icon(Icons.Filled.Notifications, contentDescription = "Notificaciones", tint = MaterialTheme.colorScheme.primary)
                     }
                 },

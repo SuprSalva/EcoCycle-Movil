@@ -27,7 +27,7 @@ import com.example.appmovil.network.dto.HistorialItemResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistorialScreen(onBackClick: () -> Unit) {
+fun HistorialScreen(onBackClick: () -> Unit, onNotificationsClick: () -> Unit) {
     var historyItems by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<List<HistorialItemResponse>>(emptyList()) }
     var isLoading by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(true) }
     var errorMessage by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
@@ -57,7 +57,7 @@ fun HistorialScreen(onBackClick: () -> Unit) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onNotificationsClick) {
                         Icon(Icons.Filled.Notifications, contentDescription = "Notificaciones", tint = MaterialTheme.colorScheme.primary)
                     }
                 },

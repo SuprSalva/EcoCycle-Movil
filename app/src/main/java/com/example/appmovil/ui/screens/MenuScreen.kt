@@ -25,7 +25,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuScreen(onLogout: () -> Unit) {
+fun MenuScreen(
+    onLogout: () -> Unit,
+    onAjustesClick: () -> Unit,
+    onAyudaClick: () -> Unit,
+    onTerminosClick: () -> Unit,
+    onNotificationsClick: () -> Unit
+) {
     val coroutineScope = rememberCoroutineScope()
     var perfil by remember { mutableStateOf<UsuarioResponse?>(null) }
     var isLoading by remember { mutableStateOf(true) }
@@ -64,7 +70,7 @@ fun MenuScreen(onLogout: () -> Unit) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onNotificationsClick) {
                         Icon(Icons.Filled.Notifications, contentDescription = "Notificaciones", tint = MaterialTheme.colorScheme.primary)
                     }
                 },
@@ -156,17 +162,17 @@ fun MenuScreen(onLogout: () -> Unit) {
                     MenuOptionItem(
                         icon = Icons.Filled.Settings,
                         title = "Ajustes",
-                        onClick = { /* TODO */ }
+                        onClick = onAjustesClick
                     )
                     MenuOptionItem(
                         icon = Icons.Filled.Help,
                         title = "Ayuda y Soporte",
-                        onClick = { /* TODO */ }
+                        onClick = onAyudaClick
                     )
                     MenuOptionItem(
                         icon = Icons.Filled.Description,
                         title = "Términos y Condiciones",
-                        onClick = { /* TODO */ }
+                        onClick = onTerminosClick
                     )
                 }
 

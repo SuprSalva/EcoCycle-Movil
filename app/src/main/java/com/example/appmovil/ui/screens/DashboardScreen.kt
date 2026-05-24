@@ -26,7 +26,7 @@ import com.example.appmovil.network.dto.UsuarioResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(onViewAllClick: () -> Unit = {}) {
+fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit) {
     var perfil by remember { mutableStateOf<UsuarioResponse?>(null) }
     var historyItems by remember { mutableStateOf<List<HistorialItemResponse>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -62,7 +62,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit = {}) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = onNotificationsClick) {
                         Icon(Icons.Filled.Notifications, contentDescription = "Notificaciones", tint = MaterialTheme.colorScheme.primary)
                     }
                 },

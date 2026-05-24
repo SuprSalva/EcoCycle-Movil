@@ -1,8 +1,9 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/surface"
     android:clipToPadding="false"
     android:paddingBottom="32dp"
     android:fillViewport="true">
@@ -16,42 +17,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
+            android:background="@drawable/bg_profile_header"
             android:orientation="vertical"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
-            android:padding="24dp"
+            android:padding="32dp"
             android:paddingTop="48dp"
-            android:paddingBottom="48dp">
+            android:paddingBottom="48dp"
+            android:elevation="4dp">
 
             <!-- Avatar -->
             <FrameLayout
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/bg_icon_light_green"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:background="@drawable/bg_circle_primary_container"
                 android:layout_marginBottom="16dp">
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_profile"
-                    app:tint="@color/primary"/>
+                    android:src="@drawable/ic_profile"
+                    app:tint="@color/on_primary_container"/>
             </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Salvador"
-                android:textColor="@color/white"
+                android:textColor="@color/on_primary"
                 android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:fontFamily="@font/quicksand"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="salvador@ejemplo.com"
-                android:textColor="@color/paleGreen"
+                android:textColor="@color/primary_container"
                 android:textSize="14sp"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/nunito_sans"/>
         </LinearLayout>
 
         <!-- Body Area -->
@@ -59,246 +65,263 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="-24dp"
-            android:padding="16dp">
+            android:layout_marginTop="16dp"
+            android:padding="20dp">
 
             <!-- Card: Nivel -->
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_border"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="24dp"
-                android:elevation="2dp">
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:strokeColor="@color/surface_variant"
+                app:strokeWidth="1dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="24dp">
                 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_rewards"
-                    app:tint="@color/primary"
-                    android:layout_marginEnd="16dp"/>
-                    
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+                    
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_circle_secondary_container"
+                        android:layout_marginEnd="16dp">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_rewards"
+                            app:tint="@color/on_secondary_container"/>
+                    </FrameLayout>
+                        
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Nivel Actual"
-                        android:textColor="@color/textSecondary"
-                        android:textSize="12sp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reciclador Experto"
-                        android:textColor="@color/primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nivel Actual"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/nunito_sans"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Reciclador Experto"
+                            android:textColor="@color/on_surface"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/quicksand"/>
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Options List -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="General"
-                android:textColor="@color/textSecondary"
+                android:textColor="@color/on_surface_variant"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/quicksand"/>
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_border"
-                android:paddingVertical="8dp"
-                android:elevation="1dp">
-
-                <!-- Mi Cuenta -->
+                app:cardBackgroundColor="@color/surface_container_lowest"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/surface_variant"
+                app:strokeWidth="1dp">
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:gravity="center_vertical">
-                    
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        app:srcCompat="@drawable/ic_profile"
-                        app:tint="@color/textSecondary"
-                        android:layout_marginEnd="16dp"/>
-                        
-                    <TextView
-                        android:layout_width="0dp"
+                    android:orientation="vertical"
+                    android:paddingVertical="8dp">
+
+                    <!-- Mi Cuenta -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Mi Cuenta"
-                        android:textColor="@color/textPrimary"
-                        android:textSize="16sp"/>
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="16dp"
+                        android:gravity="center_vertical">
                         
-                    <TextView
-                        android:layout_width="wrap_content"
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_profile"
+                            app:tint="@color/on_surface_variant"
+                            android:layout_marginEnd="16dp"/>
+                            
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Mi Cuenta"
+                            android:textColor="@color/on_surface"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/nunito_sans"/>
+                            
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=">"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/surface_variant"
+                        android:layout_marginHorizontal="20dp"/>
+
+                    <!-- Ajustes -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=">"
-                        android:textColor="@color/textSecondary"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="16dp"
+                        android:gravity="center_vertical">
+                        
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_manage"
+                            app:tint="@color/on_surface_variant"
+                            android:layout_marginEnd="16dp"/>
+                            
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Ajustes"
+                            android:textColor="@color/on_surface"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/nunito_sans"/>
+                            
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=">"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/surface_variant"
+                        android:layout_marginHorizontal="20dp"/>
+
+                    <!-- Ayuda -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="16dp"
+                        android:gravity="center_vertical">
+                        
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_help"
+                            app:tint="@color/on_surface_variant"
+                            android:layout_marginEnd="16dp"/>
+                            
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Ayuda y Soporte"
+                            android:textColor="@color/on_surface"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/nunito_sans"/>
+                            
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=">"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/surface_variant"
+                        android:layout_marginHorizontal="20dp"/>
+
+                    <!-- Legal -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="16dp"
+                        android:gravity="center_vertical">
+                        
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_info_details"
+                            app:tint="@color/on_surface_variant"
+                            android:layout_marginEnd="16dp"/>
+                            
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Términos y Condiciones"
+                            android:textColor="@color/on_surface"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/nunito_sans"/>
+                            
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=">"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/border"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <!-- Ajustes -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:gravity="center_vertical">
-                    
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        app:srcCompat="@android:drawable/ic_menu_manage"
-                        app:tint="@color/textSecondary"
-                        android:layout_marginEnd="16dp"/>
-                        
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Ajustes"
-                        android:textColor="@color/textPrimary"
-                        android:textSize="16sp"/>
-                        
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=">"
-                        android:textColor="@color/textSecondary"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/border"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <!-- Ayuda -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:gravity="center_vertical">
-                    
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        app:srcCompat="@android:drawable/ic_menu_help"
-                        app:tint="@color/textSecondary"
-                        android:layout_marginEnd="16dp"/>
-                        
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Ayuda y Soporte"
-                        android:textColor="@color/textPrimary"
-                        android:textSize="16sp"/>
-                        
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=">"
-                        android:textColor="@color/textSecondary"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/border"
-                    android:layout_marginHorizontal="16dp"/>
-
-                <!-- Legal -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:gravity="center_vertical">
-                    
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        app:srcCompat="@android:drawable/ic_menu_info_details"
-                        app:tint="@color/textSecondary"
-                        android:layout_marginEnd="16dp"/>
-                        
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Términos y Condiciones"
-                        android:textColor="@color/textPrimary"
-                        android:textSize="16sp"/>
-                        
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=">"
-                        android:textColor="@color/textSecondary"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Cerrar Sesión -->
-            <LinearLayout
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_border"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="16dp"
-                android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:elevation="1dp">
-                
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:srcCompat="@android:drawable/ic_menu_revert"
-                    app:tint="@color/error"
-                    android:layout_marginEnd="8dp"/>
-                    
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cerrar Sesión"
-                    android:textColor="@color/error"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
+                android:text="Cerrar Sesión"
+                android:textColor="@color/error"
+                app:backgroundTint="@color/error_container"
+                app:cornerRadius="28dp"
+                android:layout_marginTop="32dp"
+                android:paddingVertical="12dp"
+                android:fontFamily="@font/nunito_sans"
+                android:textStyle="bold"
+                app:icon="@android:drawable/ic_menu_revert"
+                app:iconTint="@color/error"
+                app:iconGravity="textStart"/>
             
             <TextView
                 android:layout_width="match_parent"
@@ -306,10 +329,11 @@
                 android:text="AppMovil v1.0.0"
                 android:gravity="center"
                 android:textSize="12sp"
-                android:textColor="@color/textSecondary"
+                android:textColor="@color/on_surface_variant"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="32dp"/>
+                android:layout_marginBottom="32dp"
+                android:fontFamily="@font/nunito_sans"/>
 
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

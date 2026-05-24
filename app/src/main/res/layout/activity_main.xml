@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
@@ -8,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="@color/surface"
         android:fitsSystemWindows="true"
         app:elevation="0dp">
         <View
@@ -22,7 +23,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:background="@color/background"
-        android:paddingBottom="56dp" /> <!-- Space for nav bar -->
+        android:paddingBottom="72dp" /> <!-- Space for nav bar -->
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
@@ -30,9 +31,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:fabAlignmentMode="center"
-        app:fabCradleMargin="8dp"
-        app:fabCradleRoundedCornerRadius="16dp"
-        app:backgroundTint="@color/surface">
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="24dp"
+        app:backgroundTint="@color/surface_container_lowest"
+        app:elevation="8dp">
         
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
@@ -54,7 +56,8 @@
         app:layout_anchor="@id/bottomAppBar"
         app:srcCompat="@drawable/ic_qr_code"
         app:backgroundTint="@color/primary"
-        app:tint="@color/white"
-        app:elevation="2dp" />
+        app:tint="@color/on_primary"
+        app:elevation="4dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -20,22 +21,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appmovil.network.ApiClient
+import com.example.appmovil.network.dto.HistorialItemResponse
 import com.example.appmovil.network.dto.UsuarioResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(onViewAllClick: () -> Unit = {}) {
     var perfil by remember { mutableStateOf<UsuarioResponse?>(null) }
+    var historyItems by remember { mutableStateOf<List<HistorialItemResponse>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         try {
             val response = ApiClient.apiService.getPerfil()
-            if (response.isSuccessful) {
+            val historyRes = ApiClient.apiService.getHistorial()
+
+            if (response.isSuccessful && historyRes.isSuccessful) {
                 perfil = response.body()?.data
+                historyItems = historyRes.body()?.data ?: emptyList()
             } else {
-                errorMessage = "Error al obtener el perfil: ${response.code()}"
+                errorMessage = "Error al obtener datos."
             }
         } catch (e: Exception) {
             errorMessage = "No se pudo conectar al servidor: ${e.message}"
@@ -230,49 +236,46 @@ fun DashboardScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Actividad Reciente", style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.onSurface)
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(onClick = onViewAllClick) {
                         Text("Ver todo", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium)
                     }
                 }
             }
 
-            // Actividad 1
-            item {
-                ActivityItem(
-                    icon = Icons.Outlined.WaterDrop,
-                    iconBgColor = MaterialTheme.colorScheme.secondaryContainer,
-                    iconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    title = "3 botellas",
-                    subtitle = "Ayer • Kiosco Plaza",
-                    points = "+150 pts",
-                    pointsColor = MaterialTheme.colorScheme.primary
-                )
-            }
-            
-            // Actividad 2
-            item {
-                ActivityItem(
-                    icon = Icons.Outlined.WaterDrop,
-                    iconBgColor = MaterialTheme.colorScheme.secondaryContainer,
-                    iconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    title = "5 botellas",
-                    subtitle = "12 Oct • Supermercado Central",
-                    points = "+250 pts",
-                    pointsColor = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            // Actividad 3
-            item {
-                ActivityItem(
-                    icon = Icons.Filled.Redeem,
-                    iconBgColor = MaterialTheme.colorScheme.surfaceVariant,
-                    iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    title = "Descuento Café",
-                    subtitle = "10 Oct • Canje",
-                    points = "-500 pts",
-                    pointsColor = MaterialTheme.colorScheme.error
-                )
+            if (isLoading) {
+                item {
+                    Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                }
+            } else if (historyItems.isEmpty()) {
+                item {
+                    Text(
+                        text = "Aún no tienes actividad reciente. ¡Empieza a reciclar!",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+            } else {
+                items(historyItems.take(3)) { item ->
+                    val isPositive = item.esPositivo
+                    val icon = if (isPositive) Icons.Outlined.WaterDrop else Icons.Filled.Redeem
+                    val iconBgColor = if (isPositive) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                    val iconColor = if (isPositive) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                    val pointsColor = if (isPositive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                    
+                    ActivityItem(
+                        icon = icon,
+                        iconBgColor = iconBgColor,
+                        iconColor = iconColor,
+                        title = item.titulo,
+                        subtitle = item.subtitulo,
+                        points = item.puntos,
+                        pointsColor = pointsColor
+                    )
+                }
             }
         }
     }

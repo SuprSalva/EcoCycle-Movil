@@ -15,4 +15,16 @@ interface EcoCycleApi {
 
     @GET("api/usuario/perfil")
     suspend fun getPerfil(): Response<ApiResponse<UsuarioResponse>>
+
+    @GET("api/recompensa")
+    suspend fun getRecompensas(): Response<ApiResponse<List<com.example.appmovil.network.dto.RecompensaResponse>>>
+
+    @POST("api/recompensa/canjear")
+    suspend fun canjearRecompensa(@Body request: com.example.appmovil.network.dto.CanjearRequest): Response<ApiResponse<Any>>
+
+    @GET("api/usuario/historial")
+    suspend fun getHistorial(): Response<ApiResponse<List<com.example.appmovil.network.dto.HistorialItemResponse>>>
+
+    @retrofit2.http.PUT("api/usuario/perfil")
+    suspend fun updatePerfil(@Body request: com.example.appmovil.network.dto.ActualizarPerfilRequest): Response<ApiResponse<Any>>
 }

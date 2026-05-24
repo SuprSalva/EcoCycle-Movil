@@ -8,7 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.appmovil.QrActivity
 import com.example.appmovil.ui.screens.DashboardScreen
+import com.example.appmovil.ui.screens.HistorialScreen
 import com.example.appmovil.ui.screens.MenuScreen
 import com.example.appmovil.ui.screens.RecompensasScreen
 
@@ -67,7 +68,7 @@ fun AppNavigation(onLogout: () -> Unit) {
 
                     // Tab: Recompensas
                     NavigationBarItem(
-                        icon = { Icon(Icons.Filled.Star, contentDescription = "Premios") },
+                        icon = { Icon(Icons.Filled.CardGiftcard, contentDescription = "Premios") },
                         label = { Text("Premios") },
                         selected = currentDestination?.hierarchy?.any { it.route == "recompensas" } == true,
                         onClick = {
@@ -100,9 +101,18 @@ fun AppNavigation(onLogout: () -> Unit) {
             startDestination = "dashboard",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("dashboard") { DashboardScreen() }
+            composable("dashboard") { 
+                DashboardScreen(
+                    onViewAllClick = { navController.navigate("historial") }
+                ) 
+            }
             composable("recompensas") { RecompensasScreen() }
             composable("menu") { MenuScreen(onLogout) }
+            composable("historial") { 
+                HistorialScreen(
+                    onBackClick = { navController.popBackStack() }
+                ) 
+            }
         }
     }
 }

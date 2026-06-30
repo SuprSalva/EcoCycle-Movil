@@ -3,87 +3,145 @@ package com.example.appmovil
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
+import com.google.firebase.database.FirebaseDatabase
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
+
 
 class QrActivity : AppCompatActivity() {
 
-    private lateinit var viewFinder: PreviewView
+    private lateinit var barcodeView: DecoratedBarcodeView
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            startCamera()
-        } else {
-            Toast.makeText(this, "Permiso de cámara requerido", Toast.LENGTH_LONG).show()
-            finish()
-        }
-    }
+    private val CAMERA_PERMISSION_CODE = 100
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_qr)
-        
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.isAppearanceLightStatusBars = false
 
-        viewFinder = findViewById(R.id.viewFinder)
 
-        findViewById<ImageButton>(R.id.btnClose).setOnClickListener {
-            finish()
-        }
+        barcodeView = findViewById(R.id.barcodeScanner)
 
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            startCamera()
+
+        if (checkCameraPermission()) {
+
+            iniciarScanner()
+
         } else {
-            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_CODE
+            )
         }
     }
 
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
-        cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+    private fun checkCameraPermission(): Boolean {
 
-            // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(viewFinder.surfaceProvider)
-                }
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
 
-            // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
-
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview
-                )
-
-            } catch(exc: Exception) {
-                // Log exception
-            }
-
-        }, ContextCompat.getMainExecutor(this))
     }
 
-    private fun allPermissionsGranted() = ContextCompat.checkSelfPermission(
-        baseContext, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+
+        super.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults
+        )
+
+
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+
+                iniciarScanner()
+
+            } else {
+
+                Toast.makeText(
+                    this,
+                    "Se necesita permiso de cámara",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            }
+        }
+    }
+
+
+    private fun iniciarScanner() {
+
+        barcodeView.decodeContinuous { result ->
+
+            val texto = result.text
+
+
+            if (!texto.isNullOrEmpty()) {
+
+                val ref =
+                    FirebaseDatabase.getInstance()
+                        .getReference("sessions")
+                        .child(texto)
+                        .child("linked")
+
+
+                ref.setValue(true)
+                    .addOnSuccessListener {
+
+                        Toast.makeText(
+                            this,
+                            "Máquina vinculada",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                    }
+                    .addOnFailureListener { e ->
+
+                        Toast.makeText(
+                            this,
+                            "Error: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                    }
+
+
+                finish()
+            }
+        }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        if (::barcodeView.isInitialized) {
+            barcodeView.resume()
+        }
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+
+        if (::barcodeView.isInitialized) {
+            barcodeView.pause()
+        }
+    }
 }

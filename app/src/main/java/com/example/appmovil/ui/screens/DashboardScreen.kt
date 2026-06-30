@@ -44,6 +44,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                 errorMessage = "Error al obtener datos."
             }
         } catch (e: Exception) {
+
             errorMessage = "No se pudo conectar al servidor: ${e.message}"
         } finally {
             isLoading = false

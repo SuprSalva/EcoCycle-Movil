@@ -23,6 +23,18 @@ import androidx.compose.ui.unit.sp
 import com.example.appmovil.network.ApiClient
 import com.example.appmovil.network.dto.HistorialItemResponse
 import com.example.appmovil.network.dto.UsuarioResponse
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.ui.graphics.graphicsLayer
+import com.example.appmovil.ui.components.GlobalLoader
+import com.example.appmovil.ui.components.bounceClick
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +46,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
 
     LaunchedEffect(Unit) {
         try {
+            GlobalLoader.show("Cargando información...")
             val response = ApiClient.apiService.getPerfil()
             val historyRes = ApiClient.apiService.getHistorial()
 
@@ -46,6 +59,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
         } catch (e: Exception) {
             errorMessage = "No se pudo conectar al servidor: ${e.message}"
         } finally {
+            GlobalLoader.hide()
             isLoading = false
         }
     }
@@ -79,29 +93,21 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             item {
-                if (isLoading) {
-                    Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                    }
-                } else if (errorMessage != null) {
+                if (errorMessage != null) {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         Text(errorMessage ?: "", color = MaterialTheme.colorScheme.error)
                     }
-                } else {
+                } else if (!isLoading) {
                     val user = perfil
                     if (user != null) {
-                        val puntos = user.saldoPuntos
-                        val nivel = when {
-                            puntos < 1000 -> "Novato"
-                            puntos < 3000 -> "Intermedio"
-                            else -> "Experto"
-                        }
+                        val puntos = user.puntosDisponibles
+                        val nivel = user.nivelActual
                         
                         // Sección de Bienvenida
                         Column {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    text = "Hola, ${user.nombre}! 👋",
+                                    text = "Hola, ${user.nombre ?: "Usuario"}! 👋",
                                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
@@ -112,7 +118,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                                     shape = RoundedCornerShape(12.dp)
                                 ) {
                                     Text(
-                                        text = nivel,
+                                        text = nivel ?: "Semilla",
                                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                         color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -132,16 +138,50 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
 
             // Grid Layout (Emulated with Row or Column for mobile)
             item {
-                val puntos = perfil?.saldoPuntos ?: 0f
+                val puntos = perfil?.puntosDisponibles ?: 0.0
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     // Tarjeta de Balance
-                    Card(
-                        modifier = Modifier.fillMaxWidth().height(160.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                    ) {
-                        Box(modifier = Modifier.fillMaxSize()) {
+                    val infiniteTransition = rememberInfiniteTransition(label = "glow")
+                    val glowAlpha by infiniteTransition.animateFloat(
+                        initialValue = 0.2f,
+                        targetValue = 0.8f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(1500),
+                            repeatMode = RepeatMode.Reverse
+                        ),
+                        label = "glowAlpha"
+                    )
+                    
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        // Resplandor animado
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .graphicsLayer {
+                                    scaleX = 1.05f
+                                    scaleY = 1.1f
+                                    alpha = glowAlpha
+                                }
+                                .background(
+                                    MaterialTheme.colorScheme.primaryContainer,
+                                    RoundedCornerShape(24.dp)
+                                )
+                        )
+                        
+                        Card(
+                            modifier = Modifier.fillMaxWidth().height(160.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                        ) {
+                        Box(modifier = Modifier
+                            .fillMaxSize()
+                            .background(Brush.linearGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primaryContainer,
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                                )
+                            ))
+                        ) {
                             // Círculo decorativo
                             Box(
                                 modifier = Modifier
@@ -170,21 +210,24 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                                     }
                                 }
                                 
-                                Button(
-                                    onClick = { /* TODO */ },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                        contentColor = MaterialTheme.colorScheme.primaryContainer
-                                    ),
-                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                                    modifier = Modifier.height(36.dp)
+                                Surface(
+                                    shape = RoundedCornerShape(50),
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.primaryContainer,
+                                    modifier = Modifier.height(36.dp).bounceClick { /* TODO */ }
                                 ) {
-                                    Text("Canjear", style = MaterialTheme.typography.labelMedium)
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Icon(Icons.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 16.dp)
+                                    ) {
+                                        Text("Canjear", style = MaterialTheme.typography.labelMedium)
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Icon(Icons.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    }
                                 }
                             }
                         }
+                    }
                     }
 
                     // Tarjeta de Estadísticas
@@ -193,8 +236,13 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                        border = border(1.dp, MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp))
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant)
                     ) {
+                        val botellas = perfil?.totalBotellasRecicladas ?: 0
+                        val meta = perfil?.metaActual ?: 1
+                        val faltantes = perfil?.faltantesSiguienteNivel ?: 0
+                        val progress = if (meta > 0) botellas.toFloat() / meta.toFloat() else 0f
+                        
                         Column(
                             modifier = Modifier.padding(24.dp).fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -208,22 +256,29 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                                 Icon(Icons.Outlined.Eco, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
                             }
                             Spacer(modifier = Modifier.height(12.dp))
-                            Text("128", style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.onSurface)
+                            Text("$botellas", style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.onSurface)
                             Text("Total de botellas recicladas", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             
                             Spacer(modifier = Modifier.height(16.dp))
                             
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                Text("Meta mensual", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                Text("128 / 200", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Meta de nivel", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("$botellas / $meta", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             LinearProgressIndicator(
-                                progress = 128f / 200f,
+                                progress = progress.coerceIn(0f, 1f),
                                 modifier = Modifier.fillMaxWidth().height(8.dp).clip(CircleShape),
                                 color = MaterialTheme.colorScheme.primary, // tertiary-fixed-dim approx
                                 trackColor = MaterialTheme.colorScheme.surfaceVariant
                             )
+                            if (faltantes > 0) {
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text("¡Te faltan $faltantes botellas para el siguiente nivel!", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.primary)
+                            } else {
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text("¡Has alcanzado el máximo nivel, sigue reciclando!", style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.primary)
+                            }
                         }
                     }
                 }
@@ -242,13 +297,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                 }
             }
 
-            if (isLoading) {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                    }
-                }
-            } else if (historyItems.isEmpty()) {
+            if (!isLoading && historyItems.isEmpty()) {
                 item {
                     Text(
                         text = "Aún no tienes actividad reciente. ¡Empieza a reciclar!",
@@ -291,34 +340,41 @@ fun ActivityItem(
     points: String,
     pointsColor: Color
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        border = border(1.dp, MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
+    var isVisible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+    
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn(tween(400)) + slideInVertically(tween(400), initialOffsetY = { it / 2 })
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp).fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Card(
+            modifier = Modifier.fillMaxWidth().bounceClick(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceVariant)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier.size(40.dp).background(iconBgColor, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(icon, contentDescription = null, tint = iconColor, modifier = Modifier.size(20.dp))
+            Row(
+                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier.size(40.dp).background(iconBgColor, CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(icon, contentDescription = null, tint = iconColor, modifier = Modifier.size(20.dp))
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
+                        Text(subtitle, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                 }
-                Spacer(modifier = Modifier.width(16.dp))
-                Column {
-                    Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
-                    Text(subtitle, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
+                Text(points, style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold), color = pointsColor)
             }
-            Text(points, style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold), color = pointsColor)
         }
     }
 }
-
-private fun border(width: androidx.compose.ui.unit.Dp, color: Color, shape: androidx.compose.ui.graphics.Shape) =
-    androidx.compose.foundation.BorderStroke(width, color)

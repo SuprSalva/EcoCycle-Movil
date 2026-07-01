@@ -42,6 +42,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
+import com.example.appmovil.ui.components.GlobalLoader
 
 @Composable
 fun AuthScreen(onLoginSuccess: () -> Unit) {
@@ -78,6 +79,7 @@ fun LoginView(
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
+        GlobalLoader.show("Autenticando...")
         if (result.resultCode == Activity.RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
@@ -94,30 +96,36 @@ fun LoginView(
                                         val nombreG = splitName.getOrNull(0) ?: "Usuario"
                                         val apellidosG = splitName.getOrNull(1) ?: ""
                                         
-                                        val req = RegistroRequest(nombreG, apellidosG, "")
+                                        val emailG = account.email ?: ""
+                                        val uid = auth.currentUser?.uid
+                                        val req = RegistroRequest(nombreG, apellidosG, "0000000000", emailG, "GoogleAuth123", id = uid)
                                         ApiClient.apiService.registrarUsuario(req)
                                     } catch (e: Exception) {
                                         // Ignorar si falla
                                     }
-                                    
+                                    GlobalLoader.hide()
                                     Toast.makeText(context, "Bienvenido con Google", Toast.LENGTH_SHORT).show()
                                     onLoginSuccess()
                                     isLoading = false
                                 }
                             } else {
+                                GlobalLoader.hide()
                                 Toast.makeText(context, "Error: ${authTask.exception?.message}", Toast.LENGTH_LONG).show()
                                 isLoading = false
                             }
                         }
                 } ?: run {
+                    GlobalLoader.hide()
                     isLoading = false
                     Toast.makeText(context, "Error: Token nulo", Toast.LENGTH_LONG).show()
                 }
             } catch (e: ApiException) {
+                GlobalLoader.hide()
                 isLoading = false
                 Toast.makeText(context, "Error Google: ${e.message}", Toast.LENGTH_LONG).show()
             }
         } else {
+            GlobalLoader.hide()
             isLoading = false
         }
     }
@@ -139,11 +147,8 @@ fun LoginView(
             Image(
                 painter = painterResource(id = R.drawable.logo_eco),
                 contentDescription = "Logo",
-                modifier = Modifier
-                    .size(128.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFEEEEEE)),
-                contentScale = ContentScale.Crop
+                modifier = Modifier.size(120.dp),
+                contentScale = ContentScale.Fit
             )
             
             Spacer(modifier = Modifier.height(24.dp))
@@ -154,7 +159,7 @@ fun LoginView(
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Optimistic Stewardship Starts Here",
+                text = "Recicla, acumula puntos y gana premios",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -221,8 +226,8 @@ fun LoginView(
                 }
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
-            
+            Spacer(modifier = Modifier.height(12.dp))
+
             // Login Button
             Button(
                 onClick = {
@@ -231,9 +236,11 @@ fun LoginView(
                         return@Button
                     }
                     isLoading = true
+                    GlobalLoader.show("Iniciando sesión...")
                     auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             isLoading = false
+                            GlobalLoader.hide()
                             if (task.isSuccessful) {
                                 Toast.makeText(context, "Bienvenido", Toast.LENGTH_SHORT).show()
                                 onLoginSuccess()
@@ -244,72 +251,81 @@ fun LoginView(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(28.dp),
+                    .height(46.dp),
+                shape = RoundedCornerShape(14.dp),
                 enabled = !isLoading,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text("Iniciar Sesión", style = MaterialTheme.typography.labelLarge)
             }
-            
-            Spacer(modifier = Modifier.height(12.dp))
-            
-            // Register Button
-            OutlinedButton(
-                onClick = onNavigateToRegister,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(28.dp),
-                border = border(1.dp, Color(0xFFA2D3A4), RoundedCornerShape(28.dp)),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Text("Registrarse", style = MaterialTheme.typography.labelLarge)
-            }
-            
-            // Divider
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Divider "o"
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 32.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier.weight(1f).height(1.dp).background(Color(0xFFDADADA)))
                 Text("o", style = MaterialTheme.typography.labelMedium, color = Color(0xFF707A6C), modifier = Modifier.padding(horizontal = 16.dp))
                 Box(modifier = Modifier.weight(1f).height(1.dp).background(Color(0xFFDADADA)))
             }
-            
-            // Google Login
-            OutlinedButton(
-                onClick = {
-                    isLoading = true
-                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(context.getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build()
-                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                    
-                    googleSignInClient.signOut().addOnCompleteListener {
-                        googleSignInLauncher.launch(googleSignInClient.signInIntent)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(28.dp),
-                border = border(1.dp, Color(0xFFDADADA), RoundedCornerShape(28.dp)),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                enabled = !isLoading
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Registrarse + Google side by side
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Icon(Icons.Outlined.Public, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Continuar con Google", style = MaterialTheme.typography.labelLarge)
+                // Registrarse
+                OutlinedButton(
+                    onClick = onNavigateToRegister,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(46.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    border = border(1.dp, Color(0xFFA2D3A4), RoundedCornerShape(14.dp)),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text("Registrarse", style = MaterialTheme.typography.labelMedium)
+                }
+
+                // Google
+                OutlinedButton(
+                    onClick = {
+                        isLoading = true
+                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(context.getString(R.string.default_web_client_id))
+                            .requestEmail()
+                            .build()
+                        val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                        googleSignInClient.signOut().addOnCompleteListener {
+                            googleSignInLauncher.launch(googleSignInClient.signInIntent)
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(46.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    border = border(1.dp, Color(0xFFDADADA), RoundedCornerShape(14.dp)),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    ),
+                    enabled = !isLoading
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_google),
+                        contentDescription = "Google",
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Google", style = MaterialTheme.typography.labelMedium)
+                }
             }
         }
     }
@@ -345,33 +361,31 @@ fun RegisterView(
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
-            
-            // Header
-            Box(
-                modifier = Modifier
-                    .size(64.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(Icons.Filled.Recycling, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(36.dp))
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // Logo imagen
+            Image(
+                painter = painterResource(id = R.drawable.logo_eco),
+                contentDescription = "Logo EcoCycle",
+                modifier = Modifier.size(80.dp),
+                contentScale = ContentScale.Fit
+            )
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = "EcoCycle",
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Únete a nuestra comunidad y comienza tu viaje hacia un planeta más verde hoy.",
-                style = MaterialTheme.typography.bodyMedium,
+                text = "Únete y empieza a reciclar con propósito.",
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center
             )
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             // Card Form
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -380,121 +394,153 @@ fun RegisterView(
                 shape = RoundedCornerShape(16.dp),
                 border = border(1.dp, Color(0x4DBFCABA), RoundedCornerShape(16.dp))
             ) {
-                Column(modifier = Modifier.padding(24.dp)) {
-                    // Grid for First/Last Name
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text("Nombre", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 8.dp, bottom = 8.dp))
-                            TextField(
-                                value = firstName,
-                                onValueChange = { firstName = it },
-                                placeholder = { Text("Juan") },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color.White,
-                                    unfocusedContainerColor = Color(0xFFF3F3F3),
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent
-                                ),
-                                singleLine = true
-                            )
-                        }
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text("Apellido", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 8.dp, bottom = 8.dp))
-                            TextField(
-                                value = lastName,
-                                onValueChange = { lastName = it },
-                                placeholder = { Text("Pérez") },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color.White,
-                                    unfocusedContainerColor = Color(0xFFF3F3F3),
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent
-                                ),
-                                singleLine = true
-                            )
-                        }
+                Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+
+                    // Nombre
+                    Column {
+                        Text(
+                            "Nombre",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                        )
+                        TextField(
+                            value = firstName,
+                            onValueChange = { firstName = it },
+                            placeholder = { Text("Juan", fontSize = 13.sp) },
+                            leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 13.sp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color(0xFFF3F3F3),
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            singleLine = true
+                        )
                     }
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // Phone
-                    Text("Número de Teléfono", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 8.dp, bottom = 8.dp))
-                    TextField(
-                        value = phone,
-                        onValueChange = { phone = it },
-                        placeholder = { Text("+52 55 0000 0000") },
-                        leadingIcon = { Icon(Icons.Outlined.Call, contentDescription = null, tint = Color(0xFF707A6C)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color(0xFFF3F3F3),
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        singleLine = true
-                    )
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // Email
-                    Text("Correo Electrónico", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 8.dp, bottom = 8.dp))
-                    TextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        placeholder = { Text("correo@ejemplo.com") },
-                        leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null, tint = Color(0xFF707A6C)) },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color(0xFFF3F3F3),
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        singleLine = true
-                    )
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // Password
-                    Text("Contraseña", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 8.dp, bottom = 8.dp))
-                    TextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        placeholder = { Text("Mínimo 8 caracteres") },
-                        leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null, tint = Color(0xFF707A6C)) },
-                        trailingIcon = { 
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = null,
-                                    tint = Color(0xFF707A6C)
-                                )
-                            }
-                        },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color(0xFFF3F3F3),
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        singleLine = true
-                    )
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // Terms
-                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 8.dp)) {
+
+                    // Apellido
+                    Column {
+                        Text(
+                            "Apellido",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                        )
+                        TextField(
+                            value = lastName,
+                            onValueChange = { lastName = it },
+                            placeholder = { Text("Pérez", fontSize = 13.sp) },
+                            leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 13.sp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color(0xFFF3F3F3),
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            singleLine = true
+                        )
+                    }
+
+                    // Teléfono
+                    Column {
+                        Text(
+                            "Número de Teléfono",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                        )
+                        TextField(
+                            value = phone,
+                            onValueChange = { phone = it },
+                            placeholder = { Text("+52 55 0000 0000", fontSize = 13.sp) },
+                            leadingIcon = { Icon(Icons.Outlined.Call, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 13.sp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color(0xFFF3F3F3),
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            singleLine = true
+                        )
+                    }
+
+                    // Correo
+                    Column {
+                        Text(
+                            "Correo Electrónico",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                        )
+                        TextField(
+                            value = email,
+                            onValueChange = { email = it },
+                            placeholder = { Text("correo@ejemplo.com", fontSize = 13.sp) },
+                            leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 13.sp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color(0xFFF3F3F3),
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            singleLine = true
+                        )
+                    }
+
+                    // Contraseña
+                    Column {
+                        Text(
+                            "Contraseña",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                        )
+                        TextField(
+                            value = password,
+                            onValueChange = { password = it },
+                            placeholder = { Text("Mínimo 8 caracteres", fontSize = 13.sp) },
+                            leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
+                            trailingIcon = {
+                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                    Icon(
+                                        if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                        contentDescription = null,
+                                        tint = Color(0xFF707A6C),
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            },
+                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 13.sp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color(0xFFF3F3F3),
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            singleLine = true
+                        )
+                    }
+
+                    // Términos
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = termsAccepted,
                             onCheckedChange = { termsAccepted = it },
@@ -502,14 +548,12 @@ fun RegisterView(
                         )
                         Text(
                             text = "Acepto los Términos de Servicio.",
-                            style = MaterialTheme.typography.labelMedium,
+                            style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    // Sign Up Button
+
+                    // Botón Registrarse
                     Button(
                         onClick = {
                             if (email.isBlank() || password.isBlank() || firstName.isBlank() || lastName.isBlank()) {
@@ -521,12 +565,14 @@ fun RegisterView(
                                 return@Button
                             }
                             isLoading = true
+                            GlobalLoader.show("Creando cuenta...")
                             auth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
                                         scope.launch {
                                             try {
-                                                val req = RegistroRequest(firstName, lastName, phone)
+                                                val uid = auth.currentUser?.uid
+                                                val req = RegistroRequest(firstName, lastName, phone, email, password, id = uid)
                                                 val response = ApiClient.apiService.registrarUsuario(req)
                                                 if (response.isSuccessful) {
                                                     Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
@@ -537,10 +583,12 @@ fun RegisterView(
                                             } catch (e: Exception) {
                                                 Toast.makeText(context, "Excepción: ${e.message}", Toast.LENGTH_LONG).show()
                                             } finally {
+                                                GlobalLoader.hide()
                                                 isLoading = false
                                             }
                                         }
                                     } else {
+                                        GlobalLoader.hide()
                                         isLoading = false
                                         Toast.makeText(context, "Error Firebase: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                                     }
@@ -548,33 +596,31 @@ fun RegisterView(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(56.dp),
-                        shape = RoundedCornerShape(28.dp),
+                            .height(50.dp),
+                        shape = RoundedCornerShape(14.dp),
                         enabled = !isLoading,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                     ) {
-                        Text("Registrarse", style = MaterialTheme.typography.headlineMedium.copy(fontSize = 18.sp))
+                        Text("Registrarse", style = MaterialTheme.typography.labelLarge)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(Icons.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(20.dp))
+                        Icon(Icons.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(18.dp))
                     }
-                    
-                    Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     // Login redirect
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("¿Ya tienes una cuenta?", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        TextButton(onClick = onNavigateToLogin) {
-                            Text("Inicia sesión", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
-                            Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                        Text("¿Ya tienes una cuenta?", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        TextButton(onClick = onNavigateToLogin, contentPadding = PaddingValues(start = 4.dp)) {
+                            Text("Inicia sesión", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                            Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(14.dp))
                         }
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(40.dp))
         }
     }

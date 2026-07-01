@@ -4,5 +4,8 @@ data class RegistroRequest(
     val nombre: String,
     val apellidos: String,
     val telefono: String,
-    val direccion: String? = null
+    val email: String,
+    val password: String,
+    val direccion: String? = null,
+    val id: String? = null
 )

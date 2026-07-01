@@ -6,5 +6,6 @@ data class RecompensaResponse(
     val descripcion: String,
     val costoPuntos: Double,
     val stock: Int,
-    val activa: Boolean
+    val activa: Boolean,
+    val imagenUrl: String?
 )

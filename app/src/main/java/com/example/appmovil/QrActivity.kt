@@ -3,27 +3,41 @@ package com.example.appmovil
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.firebase.database.FirebaseDatabase
+
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 
 
 class QrActivity : AppCompatActivity() {
 
+
     private lateinit var barcodeView: DecoratedBarcodeView
 
     private val CAMERA_PERMISSION_CODE = 100
 
+    private var escaneando = false
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_qr)
 
 
         barcodeView = findViewById(R.id.barcodeScanner)
+
 
 
         if (checkCameraPermission()) {
@@ -32,16 +46,23 @@ class QrActivity : AppCompatActivity() {
 
         } else {
 
+
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.CAMERA),
                 CAMERA_PERMISSION_CODE
             )
+
         }
+
     }
 
 
+
+
+
     private fun checkCameraPermission(): Boolean {
+
 
         return ContextCompat.checkSelfPermission(
             this,
@@ -51,11 +72,15 @@ class QrActivity : AppCompatActivity() {
     }
 
 
+
+
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
     ) {
+
 
         super.onRequestPermissionsResult(
             requestCode,
@@ -64,15 +89,19 @@ class QrActivity : AppCompatActivity() {
         )
 
 
-        if (requestCode == CAMERA_PERMISSION_CODE) {
 
-            if (grantResults.isNotEmpty() &&
+        if(requestCode == CAMERA_PERMISSION_CODE){
+
+
+            if(
+                grantResults.isNotEmpty() &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED
-            ) {
+            ){
 
                 iniciarScanner()
 
-            } else {
+            }else{
+
 
                 Toast.makeText(
                     this,
@@ -81,66 +110,213 @@ class QrActivity : AppCompatActivity() {
                 ).show()
 
             }
+
         }
+
     }
 
 
-    private fun iniciarScanner() {
+
+
+
+    private fun iniciarScanner(){
+
 
         barcodeView.decodeContinuous { result ->
 
-            val texto = result.text
+
+            if(escaneando){
+                return@decodeContinuous
+            }
 
 
-            if (!texto.isNullOrEmpty()) {
 
-                val ref =
-                    FirebaseDatabase.getInstance()
-                        .getReference("sessions")
-                        .child(texto)
-                        .child("linked")
+            val sessionId = result.text
 
 
-                ref.setValue(true)
-                    .addOnSuccessListener {
 
-                        Toast.makeText(
-                            this,
-                            "Máquina vinculada",
-                            Toast.LENGTH_LONG
-                        ).show()
+            if(!sessionId.isNullOrEmpty()){
 
-                    }
-                    .addOnFailureListener { e ->
 
-                        Toast.makeText(
-                            this,
-                            "Error: ${e.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                escaneando = true
 
-                    }
+
+                Log.d(
+                    "QR_SCAN",
+                    "QR leído: $sessionId"
+                )
+
+
+                vincularMaquina(sessionId)
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+    private fun vincularMaquina(sessionId:String){
+
+
+
+        val usuarioActual =
+            FirebaseAuth.getInstance()
+                .currentUser
+
+
+
+
+        if(usuarioActual == null){
+
+
+
+            Toast.makeText(
+                this,
+                "No hay usuario iniciado en Firebase",
+                Toast.LENGTH_LONG
+            ).show()
+
+
+
+            escaneando = false
+
+            return
+
+        }
+
+
+
+
+
+        val usuarioId = usuarioActual.uid
+
+
+
+        Log.d(
+            "FIREBASE_AUTH",
+            "Usuario UID: $usuarioId"
+        )
+
+
+
+
+
+        val datos = hashMapOf(
+
+            "usuario_id" to usuarioId,
+
+            "estado" to "activa",
+
+            "fecha" to FieldValue.serverTimestamp()
+
+        )
+
+
+
+
+
+        FirebaseFirestore.getInstance()
+
+            .collection("sesiones_reciclaje")
+
+            .document(sessionId)
+
+            .set(
+                datos,
+                SetOptions.merge()
+            )
+
+
+            .addOnSuccessListener {
+
+
+
+                Log.d(
+                    "FIRESTORE",
+                    "Documento creado correctamente: $sessionId"
+                )
+
+
+
+                Toast.makeText(
+                    this,
+                    "Máquina vinculada correctamente",
+                    Toast.LENGTH_LONG
+                ).show()
+
 
 
                 finish()
+
             }
-        }
+
+
+
+            .addOnFailureListener { error ->
+
+
+
+                Log.e(
+                    "FIRESTORE_ERROR",
+                    error.message ?: "Error desconocido"
+                )
+
+
+
+                error.printStackTrace()
+
+
+
+                Toast.makeText(
+                    this,
+                    "Error Firestore: ${error.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+
+
+
+                escaneando = false
+
+            }
+
+
     }
 
 
-    override fun onResume() {
+
+
+
+
+    override fun onResume(){
+
         super.onResume()
 
-        if (::barcodeView.isInitialized) {
+
+        if(::barcodeView.isInitialized){
+
             barcodeView.resume()
+
         }
+
     }
 
 
-    override fun onPause() {
-        super.onPause()
 
-        if (::barcodeView.isInitialized) {
+
+
+
+    override fun onPause(){
+
+        super.onPause()
+        if(::barcodeView.isInitialized){
             barcodeView.pause()
         }
     }

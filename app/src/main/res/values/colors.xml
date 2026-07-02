@@ -4,67 +4,70 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
-    <!-- Stitch Design System Colors (Material 3) -->
-    <color name="primary">#0d631b</color>
+    <!-- Modern Eco-Vibrant Design System Colors -->
+    <color name="primary">#10B981</color> <!-- Vibrant Emerald Green -->
     <color name="on_primary">#ffffff</color>
-    <color name="primary_container">#2e7d32</color>
-    <color name="on_primary_container">#cbffc2</color>
-    <color name="secondary">#3c6842</color>
+    <color name="primary_container">#34D399</color> <!-- Brighter mint green -->
+    <color name="on_primary_container">#064E3B</color> <!-- Deep green for contrast -->
+    <color name="secondary">#84CC16</color> <!-- Lime Green -->
     <color name="on_secondary">#ffffff</color>
-    <color name="secondary_container">#bdefbe</color>
-    <color name="on_secondary_container">#426e47</color>
-    <color name="tertiary">#6e5100</color>
+    <color name="secondary_container">#D9F99D</color> <!-- Light lime -->
+    <color name="on_secondary_container">#3F6212</color>
+    <color name="tertiary">#0EA5E9</color> <!-- Fresh Sky Blue for contrast -->
     <color name="on_tertiary">#ffffff</color>
-    <color name="tertiary_container">#8c6800</color>
-    <color name="on_tertiary_container">#ffefd7</color>
-    <color name="error">#ba1a1a</color>
+    <color name="tertiary_container">#BAE6FD</color>
+    <color name="on_tertiary_container">#0369A1</color>
+    
+    <color name="error">#EF4444</color>
     <color name="on_error">#ffffff</color>
-    <color name="error_container">#ffdad6</color>
-    <color name="on_error_container">#93000a</color>
-    <color name="background">#f9f9f9</color>
-    <color name="on_background">#1a1c1c</color>
-    <color name="surface">#f9f9f9</color>
-    <color name="on_surface">#1a1c1c</color>
-    <color name="surface_variant">#e2e2e2</color>
-    <color name="on_surface_variant">#40493d</color>
-    <color name="outline">#707a6c</color>
-    <color name="outline_variant">#bfcaba</color>
+    <color name="error_container">#FEE2E2</color>
+    <color name="on_error_container">#991B1B</color>
+    
+    <!-- Clean, bright backgrounds -->
+    <color name="background">#F8FAFC</color> <!-- Slate 50, crisp clean white with tiny blue tint -->
+    <color name="on_background">#0F172A</color>
+    <color name="surface">#FFFFFF</color> <!-- Pure white for cards -->
+    <color name="on_surface">#0F172A</color>
+    <color name="surface_variant">#F1F5F9</color>
+    <color name="on_surface_variant">#475569</color>
+    <color name="outline">#94A3B8</color>
+    <color name="outline_variant">#E2E8F0</color>
     
     <color name="surface_container_lowest">#ffffff</color>
-    <color name="surface_container_low">#f3f3f3</color>
-    <color name="surface_container">#eeeeee</color>
-    <color name="surface_container_high">#e8e8e8</color>
-    <color name="surface_container_highest">#e2e2e2</color>
+    <color name="surface_container_low">#F8FAFC</color>
+    <color name="surface_container">#F1F5F9</color>
+    <color name="surface_container_high">#E2E8F0</color>
+    <color name="surface_container_highest">#CBD5E1</color>
     
-    <color name="surface_tint">#1b6d24</color>
-    <color name="surface_dim">#dadada</color>
-    <color name="surface_bright">#f9f9f9</color>
+    <color name="surface_tint">#10B981</color>
+    <color name="surface_dim">#E2E8F0</color>
+    <color name="surface_bright">#FFFFFF</color>
     
-    <color name="primary_fixed">#a3f69c</color>
-    <color name="primary_fixed_dim">#88d982</color>
-    <color name="on_primary_fixed">#002204</color>
-    <color name="on_primary_fixed_variant">#005312</color>
-    <color name="secondary_fixed">#bdefbe</color>
-    <color name="secondary_fixed_dim">#a2d3a4</color>
-    <color name="on_secondary_fixed">#002109</color>
-    <color name="on_secondary_fixed_variant">#24502c</color>
-    <color name="tertiary_fixed">#ffdfa0</color>
-    <color name="tertiary_fixed_dim">#f8bd2a</color>
-    <color name="on_tertiary_fixed">#261a00</color>
-    <color name="on_tertiary_fixed_variant">#5c4300</color>
+    <color name="primary_fixed">#A7F3D0</color>
+    <color name="primary_fixed_dim">#6EE7B7</color>
+    <color name="on_primary_fixed">#022C22</color>
+    <color name="on_primary_fixed_variant">#065F46</color>
+    <color name="secondary_fixed">#ECFCCB</color>
+    <color name="secondary_fixed_dim">#D9F99D</color>
+    <color name="on_secondary_fixed">#1A2E05</color>
+    <color name="on_secondary_fixed_variant">#3F6212</color>
+    <color name="tertiary_fixed">#E0F2FE</color>
+    <color name="tertiary_fixed_dim">#BAE6FD</color>
+    <color name="on_tertiary_fixed">#082F49</color>
+    <color name="on_tertiary_fixed_variant">#0369A1</color>
     
-    <!-- Legacy compatibility colors to prevent crashes during migration -->
-    <color name="accent">#5DCAA5</color>
-    <color name="lightGreen">#E1F5EE</color>
-    <color name="paleGreen">#9FE1CB</color>
-    <color name="inputBackground">#F5F5F4</color>
-    <color name="textPrimary">#1a1c1c</color>
-    <color name="textSecondary">#40493d</color>
+    <!-- Legacy compatibility colors -->
+    <color name="accent">#34D399</color>
+    <color name="lightGreen">#D1FAE5</color>
+    <color name="paleGreen">#A7F3D0</color>
+    <color name="inputBackground">#F1F5F9</color>
+    <color name="textPrimary">#0F172A</color>
+    <color name="textSecondary">#64748B</color>
     <color name="textInverse">#FFFFFF</color>
-    <color name="border">#E5E5E3</color>
-    <color name="success">#0F6E56</color>
-    <color name="rewardCoffee">#E1F5EE</color>
-    <color name="rewardDiscount">#E6F1FB</color>
-    <color name="rewardTaco">#FAEEDA</color>
-    <color name="rewardBag">#EEEDFE</color>
+    <color name="border">#E2E8F0</color>
+    <color name="success">#10B981</color>
+    <color name="rewardCoffee">#FEF3C7</color> <!-- Warm yellow -->
+    <color name="rewardDiscount">#E0F2FE</color> <!-- Soft blue -->
+    <color name="rewardTaco">#FFEDD5</color> <!-- Soft orange -->
+    <color name="rewardBag">#EDE9FE</color> <!-- Soft purple -->
 </resources>

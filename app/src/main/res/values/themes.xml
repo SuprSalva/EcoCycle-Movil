@@ -58,5 +58,6 @@
     <!-- Component Styles -->
     <style name="Widget.App.Button" parent="Widget.Material3.Button">
         <!-- Buttons are fully rounded (pill shaped) by default in MDC3, so we can just use the base -->
+        <item name="android:stateListAnimator">@animator/button_bounce</item>
     </style>
 </resources>

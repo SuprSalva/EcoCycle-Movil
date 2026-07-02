@@ -81,6 +81,9 @@ dependencies {
     // Google Sign In
     implementation(libs.play.services.auth)
 
+    // Image Loading
+    implementation(libs.coil.compose)
+
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

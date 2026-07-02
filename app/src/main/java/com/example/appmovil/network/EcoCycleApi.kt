@@ -7,6 +7,8 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface EcoCycleApi {
 
@@ -22,9 +24,18 @@ interface EcoCycleApi {
     @POST("api/recompensa/canjear")
     suspend fun canjearRecompensa(@Body request: com.example.appmovil.network.dto.CanjearRequest): Response<ApiResponse<Any>>
 
+    @GET("api/recompensa/mis-canjes")
+    suspend fun getMisCanjes(): Response<ApiResponse<List<com.example.appmovil.network.dto.CanjeUsuarioResponse>>>
+
     @GET("api/usuario/historial")
     suspend fun getHistorial(): Response<ApiResponse<List<com.example.appmovil.network.dto.HistorialItemResponse>>>
 
-    @retrofit2.http.PUT("api/usuario/perfil")
+    @PUT("api/usuario/perfil")
     suspend fun updatePerfil(@Body request: com.example.appmovil.network.dto.ActualizarPerfilRequest): Response<ApiResponse<Any>>
+
+    @GET("api/notificacion")
+    suspend fun getNotificaciones(): Response<ApiResponse<List<com.example.appmovil.network.dto.NotificacionResponse>>>
+
+    @PUT("api/notificacion/leer")
+    suspend fun marcarNotificacionesLeidas(): Response<ApiResponse<Any>>
 }

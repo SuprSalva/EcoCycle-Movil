@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
     // Reemplaza por el puerto en el que corre tu API .NET
-    private const val BASE_URL = "http://172.18.160.1:5000/"
+    private const val BASE_URL = "http://192.168.1.13:5171/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(AuthInterceptor())

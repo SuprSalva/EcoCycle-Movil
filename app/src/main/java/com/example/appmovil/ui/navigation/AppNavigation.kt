@@ -103,7 +103,11 @@ fun AppNavigation(onLogout: () -> Unit) {
         NavHost(
             navController = navController,
             startDestination = "dashboard",
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            enterTransition = { androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(500)) + androidx.compose.animation.scaleIn(initialScale = 0.95f, animationSpec = androidx.compose.animation.core.tween(500)) },
+            exitTransition = { androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(300)) },
+            popEnterTransition = { androidx.compose.animation.fadeIn(androidx.compose.animation.core.tween(500)) + androidx.compose.animation.scaleIn(initialScale = 0.95f, animationSpec = androidx.compose.animation.core.tween(500)) },
+            popExitTransition = { androidx.compose.animation.fadeOut(androidx.compose.animation.core.tween(300)) }
         ) {
             composable("dashboard") { 
                 DashboardScreen(

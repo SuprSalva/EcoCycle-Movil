@@ -10,6 +10,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import com.example.appmovil.R
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.appmovil.network.ApiClient
 import com.example.appmovil.network.dto.ActualizarPerfilRequest
 import com.example.appmovil.network.dto.UsuarioResponse
+import com.example.appmovil.ui.components.GlobalLoader
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +44,7 @@ fun MenuScreen(
 
     fun loadPerfil() {
         coroutineScope.launch {
-            isLoading = true
+            GlobalLoader.show("Cargando perfil...")
             try {
                 val response = ApiClient.apiService.getPerfil()
                 if (response.isSuccessful) {
@@ -51,7 +55,7 @@ fun MenuScreen(
             } catch (e: Exception) {
                 errorMessage = "Error de conexión."
             } finally {
-                isLoading = false
+                GlobalLoader.hide()
             }
         }
     }
@@ -66,7 +70,7 @@ fun MenuScreen(
                 title = { Text("EcoCycle", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary) },
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Filled.Recycling, contentDescription = "Logo", tint = MaterialTheme.colorScheme.primary)
+                        Icon(painter = painterResource(id = R.drawable.logo_transparent), contentDescription = "Logo", modifier = Modifier.size(28.dp), tint = Color.Unspecified)
                     }
                 },
                 actions = {
@@ -78,11 +82,7 @@ fun MenuScreen(
             )
         }
     ) { paddingValues ->
-        if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            }
-        } else if (errorMessage != null) {
+        if (errorMessage != null) {
             Box(modifier = Modifier.fillMaxSize().padding(paddingValues), contentAlignment = Alignment.Center) {
                 Text(errorMessage ?: "", color = MaterialTheme.colorScheme.error)
             }
@@ -197,9 +197,9 @@ fun MenuScreen(
     }
 
     if (showEditDialog && perfil != null) {
-        var nombre by remember { mutableStateOf(perfil!!.nombre) }
-        var apellidos by remember { mutableStateOf(perfil!!.apellidos) }
-        var telefono by remember { mutableStateOf(perfil!!.telefono) }
+        var nombre by remember { mutableStateOf(perfil!!.nombre ?: "") }
+        var apellidos by remember { mutableStateOf(perfil!!.apellidos ?: "") }
+        var telefono by remember { mutableStateOf(perfil!!.telefono ?: "") }
         var direccion by remember { mutableStateOf(perfil!!.direccion ?: "") }
         var isSaving by remember { mutableStateOf(false) }
 
@@ -241,6 +241,7 @@ fun MenuScreen(
                 Button(
                     onClick = {
                         coroutineScope.launch {
+                            GlobalLoader.show("Guardando...")
                             isSaving = true
                             try {
                                 val req = ActualizarPerfilRequest(nombre, apellidos, telefono, direccion)
@@ -254,6 +255,7 @@ fun MenuScreen(
                             } catch (e: Exception) {
                                 // Optional: handle exception
                             } finally {
+                                GlobalLoader.hide()
                                 isSaving = false
                             }
                         }

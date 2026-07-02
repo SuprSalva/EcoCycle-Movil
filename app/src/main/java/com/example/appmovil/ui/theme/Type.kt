@@ -9,7 +9,10 @@ import androidx.compose.ui.unit.sp
 import com.example.appmovil.R
 
 val NunitoSans = FontFamily.SansSerif
-val Quicksand = FontFamily.SansSerif
+val Quicksand = FontFamily(
+    Font(R.font.quicksand, FontWeight.Normal),
+    Font(R.font.quicksand, FontWeight.Bold)
+)
 
 val Typography = Typography(
     headlineLarge = TextStyle(

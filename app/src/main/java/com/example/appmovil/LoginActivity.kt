@@ -6,9 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import com.example.appmovil.ui.components.GlobalLoaderOverlay
 import com.example.appmovil.ui.screens.AuthScreen
 import com.example.appmovil.ui.theme.EcoCycleTheme
 import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,11 +27,14 @@ class LoginActivity : ComponentActivity() {
         setContent {
             EcoCycleTheme {
                 Surface {
-                    AuthScreen(
-                        onLoginSuccess = {
-                            goToMain()
-                        }
-                    )
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        AuthScreen(
+                            onLoginSuccess = {
+                                goToMain()
+                            }
+                        )
+                        GlobalLoaderOverlay()
+                    }
                 }
             }
         }

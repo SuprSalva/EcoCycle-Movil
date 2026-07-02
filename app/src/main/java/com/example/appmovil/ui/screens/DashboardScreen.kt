@@ -12,6 +12,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material3.*
+import androidx.compose.ui.res.painterResource
+import com.example.appmovil.R
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,7 +74,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                 },
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Filled.Recycling, contentDescription = "Logo", tint = MaterialTheme.colorScheme.primary)
+                        Icon(painter = painterResource(id = R.drawable.logo_transparent), contentDescription = "Logo", modifier = Modifier.size(28.dp), tint = Color.Unspecified)
                     }
                 },
                 actions = {

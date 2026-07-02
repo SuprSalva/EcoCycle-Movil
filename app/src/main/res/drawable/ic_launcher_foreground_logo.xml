@@ -10,5 +10,5 @@
         android:top="22dp"
         android:right="22dp"
         android:bottom="22dp"
-        android:drawable="@drawable/logo_eco" />
+        android:drawable="@drawable/logo_transparent" />
 </layer-list>

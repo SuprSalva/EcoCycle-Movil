@@ -145,7 +145,7 @@ fun LoginView(
         ) {
             // Logo Image
             Image(
-                painter = painterResource(id = R.drawable.logo_eco),
+                painter = painterResource(id = R.drawable.logo_transparent),
                 contentDescription = "Logo",
                 modifier = Modifier.size(120.dp),
                 contentScale = ContentScale.Fit
@@ -365,7 +365,7 @@ fun RegisterView(
 
             // Logo imagen
             Image(
-                painter = painterResource(id = R.drawable.logo_eco),
+                painter = painterResource(id = R.drawable.logo_transparent),
                 contentDescription = "Logo EcoCycle",
                 modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.Fit

@@ -104,7 +104,7 @@ fun GlobalLoaderOverlay() {
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.logo_eco),
+                            painter = painterResource(id = R.drawable.logo_transparent),
                             contentDescription = "Loading Logo",
                             modifier = Modifier
                                 .fillMaxSize()

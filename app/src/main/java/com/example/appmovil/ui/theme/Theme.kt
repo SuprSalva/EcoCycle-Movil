@@ -5,13 +5,13 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val PrimaryColor = Color(0xFF10B981) // Vibrant Emerald Green
+val PrimaryColor = Color(0xFF0D631B)
 val OnPrimaryColor = Color(0xFFFFFFFF)
-val PrimaryContainerColor = Color(0xFFA7F3D0)
-val OnPrimaryContainerColor = Color(0xFF064E3B)
-val SecondaryColor = Color(0xFF84CC16) // Lime Green / Esmeralda accent
-val SecondaryContainerColor = Color(0xFFD9F99D)
-val OnSecondaryContainerColor = Color(0xFF3F6212)
+val PrimaryContainerColor = Color(0xFF2E7D32)
+val OnPrimaryContainerColor = Color(0xFFCBFFC2)
+val SecondaryColor = Color(0xFF3C6842)
+val SecondaryContainerColor = Color(0xFFBDEFBE)
+val OnSecondaryContainerColor = Color(0xFF426E47)
 val BackgroundColor = Color(0xFFF9F9F9)
 val OnBackgroundColor = Color(0xFF1A1C1C)
 val SurfaceColor = Color(0xFFFFFFFF) // surface-container-lowest

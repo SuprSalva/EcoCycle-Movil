@@ -1,24 +1,21 @@
 package com.example.appmovil.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AjustesScreen(onBackClick: () -> Unit) {
-    var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -42,36 +39,50 @@ fun AjustesScreen(onBackClick: () -> Unit) {
                 .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
                 .padding(horizontal = 20.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
                 Text(
-                    text = "Preferencias",
+                    text = "Cuenta",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 4.dp, top = 8.dp)
                 )
             }
             item {
                 ListItem(
-                    headlineContent = { Text("Notificaciones Push") },
-                    supportingContent = { Text("Recibe alertas de reciclaje y promociones") },
+                    headlineContent = { Text("Editar Perfil") },
                     leadingContent = {
-                        Icon(Icons.Filled.Notifications, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Filled.Person, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     },
-                    trailingContent = {
-                        Switch(
-                            checked = notificationsEnabled,
-                            onCheckedChange = { notificationsEnabled = it }
-                        )
-                    },
+                    modifier = Modifier.clickable { /* TODO */ },
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }
             item {
                 ListItem(
+                    headlineContent = { Text("Cambiar Contraseña") },
+                    leadingContent = {
+                        Icon(Icons.Filled.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    },
+                    modifier = Modifier.clickable { /* TODO */ },
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+                )
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Preferencias",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
+            item {
+                ListItem(
                     headlineContent = { Text("Modo Oscuro") },
-                    supportingContent = { Text("Ajusta el tema de la aplicación") },
+                    supportingContent = { Text("Ajusta el tema visual de la aplicación") },
                     leadingContent = {
                         Icon(Icons.Filled.Palette, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     },
@@ -84,12 +95,42 @@ fun AjustesScreen(onBackClick: () -> Unit) {
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Información Legal",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
             item {
                 ListItem(
-                    headlineContent = { Text("Idioma") },
-                    supportingContent = { Text("Español (Latinoamérica)") },
+                    headlineContent = { Text("Términos y Condiciones") },
                     leadingContent = {
-                        Icon(Icons.Filled.Language, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Filled.Description, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    },
+                    modifier = Modifier.clickable { /* TODO */ },
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+                )
+            }
+            item {
+                ListItem(
+                    headlineContent = { Text("Política de Privacidad") },
+                    leadingContent = {
+                        Icon(Icons.Filled.PrivacyTip, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    },
+                    modifier = Modifier.clickable { /* TODO */ },
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+                )
+            }
+            item {
+                ListItem(
+                    headlineContent = { Text("Versión de la App") },
+                    supportingContent = { Text("v1.0.0") },
+                    leadingContent = {
+                        Icon(Icons.Filled.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     },
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
                 )

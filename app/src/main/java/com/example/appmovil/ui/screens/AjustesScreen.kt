@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -17,6 +16,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AjustesScreen(onBackClick: () -> Unit) {
     var darkModeEnabled by remember { mutableStateOf(false) }
+    var soundEnabled by remember { mutableStateOf(true) }
+    var locationEnabled by remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -43,40 +44,10 @@ fun AjustesScreen(onBackClick: () -> Unit) {
         ) {
             item {
                 Text(
-                    text = "Cuenta",
+                    text = "Visualización",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 4.dp, top = 8.dp)
-                )
-            }
-            item {
-                ListItem(
-                    headlineContent = { Text("Editar Perfil") },
-                    leadingContent = {
-                        Icon(Icons.Filled.Person, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                    },
-                    modifier = Modifier.clickable { /* TODO */ },
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
-                )
-            }
-            item {
-                ListItem(
-                    headlineContent = { Text("Cambiar Contraseña") },
-                    leadingContent = {
-                        Icon(Icons.Filled.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                    },
-                    modifier = Modifier.clickable { /* TODO */ },
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
-                )
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Preferencias",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 4.dp)
                 )
             }
             item {
@@ -99,7 +70,7 @@ fun AjustesScreen(onBackClick: () -> Unit) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Información Legal",
+                    text = "Preferencias de Escaneo",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -107,9 +78,52 @@ fun AjustesScreen(onBackClick: () -> Unit) {
             }
             item {
                 ListItem(
-                    headlineContent = { Text("Términos y Condiciones") },
+                    headlineContent = { Text("Sonidos de Escáner") },
+                    supportingContent = { Text("Reproducir un sonido al leer un código QR") },
                     leadingContent = {
-                        Icon(Icons.Filled.Description, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Filled.VolumeUp, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = soundEnabled,
+                            onCheckedChange = { soundEnabled = it }
+                        )
+                    },
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+                )
+            }
+            item {
+                ListItem(
+                    headlineContent = { Text("Ubicación Automática") },
+                    supportingContent = { Text("Usar tu ubicación para encontrar contenedores") },
+                    leadingContent = {
+                        Icon(Icons.Filled.LocationOn, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                    },
+                    trailingContent = {
+                        Switch(
+                            checked = locationEnabled,
+                            onCheckedChange = { locationEnabled = it }
+                        )
+                    },
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+                )
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Datos y Privacidad",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+            }
+            item {
+                ListItem(
+                    headlineContent = { Text("Limpiar Caché") },
+                    supportingContent = { Text("Libera espacio en tu dispositivo") },
+                    leadingContent = {
+                        Icon(Icons.Filled.DeleteOutline, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     },
                     modifier = Modifier.clickable { /* TODO */ },
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
@@ -117,21 +131,12 @@ fun AjustesScreen(onBackClick: () -> Unit) {
             }
             item {
                 ListItem(
-                    headlineContent = { Text("Política de Privacidad") },
+                    headlineContent = { Text("Eliminar Cuenta") },
+                    supportingContent = { Text("Borra permanentemente tus datos y puntos", color = MaterialTheme.colorScheme.error) },
                     leadingContent = {
-                        Icon(Icons.Filled.PrivacyTip, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Icon(Icons.Filled.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.error)
                     },
                     modifier = Modifier.clickable { /* TODO */ },
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
-                )
-            }
-            item {
-                ListItem(
-                    headlineContent = { Text("Versión de la App") },
-                    supportingContent = { Text("v1.0.0") },
-                    leadingContent = {
-                        Icon(Icons.Filled.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-                    },
                     colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
                 )
             }

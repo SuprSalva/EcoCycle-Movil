@@ -221,7 +221,22 @@ fun LoginView(
             
             // Forgot Password
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                TextButton(onClick = { /*TODO*/ }) {
+                TextButton(onClick = {
+                    if (email.isBlank()) {
+                        Toast.makeText(context, "Ingresa tu correo en el campo superior para recuperar la contraseña", Toast.LENGTH_SHORT).show()
+                    } else {
+                        GlobalLoader.show("Enviando correo...")
+                        auth.sendPasswordResetEmail(email)
+                            .addOnCompleteListener { task ->
+                                GlobalLoader.hide()
+                                if (task.isSuccessful) {
+                                    Toast.makeText(context, "Correo de recuperación enviado a $email", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(context, "Error: ${task.exception?.localizedMessage}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                    }
+                }) {
                     Text("¿Olvidaste tu contraseña?", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                 }
             }

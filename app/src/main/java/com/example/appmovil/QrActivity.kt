@@ -142,6 +142,10 @@ class QrActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 runOnUiThread {
                     Toast.makeText(this, "Máquina vinculada", Toast.LENGTH_LONG).show()
+                    val resultIntent = android.content.Intent().apply {
+                        putExtra("session_id", sessionId)
+                    }
+                    setResult(android.app.Activity.RESULT_OK, resultIntent)
                     finish()
                 }
             }

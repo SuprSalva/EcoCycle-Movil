@@ -91,6 +91,7 @@ dependencies {
 
     // Image Loading
     implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
 
     // Retrofit
     implementation(libs.retrofit)

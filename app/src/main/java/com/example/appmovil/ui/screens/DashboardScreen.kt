@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appmovil.network.ApiClient
@@ -112,7 +113,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                         // Sección de Bienvenida
                         Column {
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
                                     Box(
                                         modifier = Modifier
                                             .size(48.dp)
@@ -130,7 +131,10 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                                     Text(
                                         text = "Hola, ${user.nombre ?: "Usuario"}! 👋",
                                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.onBackground
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.padding(end = 8.dp)
                                     )
                                 }
                                 // Badge de nivel
@@ -142,7 +146,8 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                                         text = nivel ?: "Semilla",
                                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        maxLines = 1
                                     )
                                 }
                             }

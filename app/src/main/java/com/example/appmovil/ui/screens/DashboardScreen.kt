@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Eco
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material3.*
+import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import com.example.appmovil.R
 import androidx.compose.runtime.*
@@ -35,12 +36,14 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import com.example.appmovil.ui.components.GlobalLoader
 import com.example.appmovil.ui.components.bounceClick
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit) {
+fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit, onCanjearClick: () -> Unit) {
     var perfil by remember { mutableStateOf<UsuarioResponse?>(null) }
     var historyItems by remember { mutableStateOf<List<HistorialItemResponse>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
@@ -75,7 +78,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                 },
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(painter = painterResource(id = R.drawable.logo_transparent), contentDescription = "Logo", modifier = Modifier.size(28.dp), tint = Color.Unspecified)
+                        Image(painter = painterResource(id = R.drawable.logo_transparent), contentDescription = "Logo", modifier = Modifier.size(28.dp))
                     }
                 },
                 actions = {
@@ -108,13 +111,28 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                         
                         // Sección de Bienvenida
                         Column {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = "Hola, ${user.nombre ?: "Usuario"}! 👋",
-                                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(48.dp)
+                                            .clip(CircleShape)
+                                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        if (user.avatarUrl.isNullOrEmpty()) {
+                                            Icon(Icons.Filled.Person, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        } else {
+                                            AsyncImage(model = user.avatarUrl, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    Text(
+                                        text = "Hola, ${user.nombre ?: "Usuario"}! 👋",
+                                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                }
                                 // Badge de nivel
                                 Surface(
                                     color = MaterialTheme.colorScheme.secondaryContainer,
@@ -217,7 +235,7 @@ fun DashboardScreen(onViewAllClick: () -> Unit, onNotificationsClick: () -> Unit
                                     shape = RoundedCornerShape(50),
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     contentColor = MaterialTheme.colorScheme.primaryContainer,
-                                    modifier = Modifier.height(36.dp).bounceClick { /* TODO */ }
+                                    modifier = Modifier.height(36.dp).bounceClick { onCanjearClick() }
                                 ) {
                                     Row(
                                         verticalAlignment = Alignment.CenterVertically,

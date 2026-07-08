@@ -78,9 +78,13 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore)
+    implementation("com.google.firebase:firebase-storage")
 
     // ML Kit Barcode Scanning
-    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
+    
+    // DataStore (force version 1.1.1+ for 16KB alignment)
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // Google Sign In
     implementation(libs.play.services.auth)

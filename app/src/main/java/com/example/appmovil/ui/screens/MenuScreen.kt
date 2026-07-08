@@ -21,11 +21,23 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
+import com.google.firebase.storage.FirebaseStorage
+import java.util.UUID
 import com.example.appmovil.network.ApiClient
 import com.example.appmovil.network.dto.ActualizarPerfilRequest
 import com.example.appmovil.network.dto.UsuarioResponse
 import com.example.appmovil.ui.components.GlobalLoader
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -130,7 +142,16 @@ fun MenuScreen(
                                     .border(4.dp, MaterialTheme.colorScheme.surface, CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(Icons.Filled.Person, contentDescription = null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                                if (perfil?.avatarUrl.isNullOrEmpty()) {
+                                    Icon(Icons.Filled.Person, contentDescription = null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                                } else {
+                                    AsyncImage(
+                                        model = perfil?.avatarUrl,
+                                        contentDescription = "Avatar",
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
                             }
                             IconButton(
                                 onClick = { showEditDialog = true },
@@ -201,13 +222,79 @@ fun MenuScreen(
         var apellidos by remember { mutableStateOf(perfil!!.apellidos ?: "") }
         var telefono by remember { mutableStateOf(perfil!!.telefono ?: "") }
         var direccion by remember { mutableStateOf(perfil!!.direccion ?: "") }
+        var avatarUrl by remember { mutableStateOf(perfil!!.avatarUrl) }
+        var localImageUri by remember { mutableStateOf<Uri?>(null) }
         var isSaving by remember { mutableStateOf(false) }
+
+        val predefinedAvatars = listOf(
+            "https://api.dicebear.com/9.x/avataaars/svg?seed=Felix",
+            "https://api.dicebear.com/9.x/avataaars/svg?seed=Aneka",
+            "https://api.dicebear.com/9.x/avataaars/svg?seed=Jack",
+            "https://api.dicebear.com/9.x/avataaars/svg?seed=Jocelyn",
+            "https://api.dicebear.com/9.x/avataaars/svg?seed=Nala",
+            "https://api.dicebear.com/9.x/avataaars/svg?seed=Destiny"
+        )
+
+        val photoPickerLauncher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                localImageUri = uri
+                avatarUrl = null
+            }
+        }
 
         AlertDialog(
             onDismissRequest = { if (!isSaving) showEditDialog = false },
             title = { Text("Editar Perfil") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .clickable { photoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (localImageUri != null) {
+                                AsyncImage(model = localImageUri, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                            } else if (!avatarUrl.isNullOrEmpty()) {
+                                AsyncImage(model = avatarUrl, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                            } else {
+                                Icon(Icons.Filled.Person, contentDescription = null, modifier = Modifier.size(40.dp))
+                            }
+                            Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha=0.3f)), contentAlignment = Alignment.Center) {
+                                Icon(Icons.Filled.CameraAlt, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
+                            }
+                        }
+                    }
+
+                    Text("O elige un ícono:", style = MaterialTheme.typography.labelMedium)
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(4),
+                        modifier = Modifier.height(100.dp).fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(predefinedAvatars) { url ->
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(CircleShape)
+                                    .border(if (avatarUrl == url) 2.dp else 0.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                                    .clickable { 
+                                        avatarUrl = url
+                                        localImageUri = null
+                                    }
+                            ) {
+                                AsyncImage(model = url, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                            }
+                        }
+                    }
+
                     OutlinedTextField(
                         value = nombre,
                         onValueChange = { nombre = it },
@@ -244,7 +331,13 @@ fun MenuScreen(
                             GlobalLoader.show("Guardando...")
                             isSaving = true
                             try {
-                                val req = ActualizarPerfilRequest(nombre, apellidos, telefono, direccion)
+                                var finalAvatarUrl = avatarUrl
+                                if (localImageUri != null) {
+                                    val storageRef = FirebaseStorage.getInstance().reference.child("fotosperfil/${perfil!!.id}_${UUID.randomUUID()}")
+                                    val uploadTask = storageRef.putFile(localImageUri!!).await()
+                                    finalAvatarUrl = storageRef.downloadUrl.await().toString()
+                                }
+                                val req = ActualizarPerfilRequest(nombre, apellidos, telefono, direccion, finalAvatarUrl)
                                 val response = ApiClient.apiService.updatePerfil(req)
                                 if (response.isSuccessful) {
                                     showEditDialog = false

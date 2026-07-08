@@ -124,7 +124,8 @@ fun AppNavigation(onLogout: () -> Unit) {
             composable("dashboard") { 
                 DashboardScreen(
                     onViewAllClick = { navController.navigate("historial") },
-                    onNotificationsClick = { navController.navigate("notificaciones") }
+                    onNotificationsClick = { navController.navigate("notificaciones") },
+                    onCanjearClick = { navController.navigate("recompensas") }
                 ) 
             }
             composable("recompensas") { 

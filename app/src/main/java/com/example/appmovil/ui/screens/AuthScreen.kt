@@ -410,60 +410,56 @@ fun RegisterView(
                 border = border(1.dp, Color(0x4DBFCABA), RoundedCornerShape(16.dp))
             ) {
                 Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    // Nombre y Apellido
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                "Nombre",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
-                            )
-                            TextField(
-                                value = firstName,
-                                onValueChange = { firstName = it },
-                                placeholder = { Text("Juan", fontSize = 12.sp) },
-                                leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(12.dp),
-                                textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color.White,
-                                    unfocusedContainerColor = Color(0xFFF3F3F3),
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent
-                                ),
-                                singleLine = true
-                            )
-                        }
+                    // Nombre
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            "Nombre",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                        )
+                        TextField(
+                            value = firstName,
+                            onValueChange = { firstName = it },
+                            placeholder = { Text("Juan", fontSize = 12.sp) },
+                            leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color(0xFFF3F3F3),
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            singleLine = true
+                        )
+                    }
 
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                "Apellido",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
-                            )
-                            TextField(
-                                value = lastName,
-                                onValueChange = { lastName = it },
-                                placeholder = { Text("Pérez", fontSize = 12.sp) },
-                                leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(12.dp),
-                                textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color.White,
-                                    unfocusedContainerColor = Color(0xFFF3F3F3),
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent
-                                ),
-                                singleLine = true
-                            )
-                        }
+                    // Apellido
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            "Apellido",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                        )
+                        TextField(
+                            value = lastName,
+                            onValueChange = { lastName = it },
+                            placeholder = { Text("Pérez", fontSize = 12.sp) },
+                            leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = Color(0xFF707A6C), modifier = Modifier.size(18.dp)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = LocalTextStyle.current.copy(fontSize = 12.sp),
+                            colors = TextFieldDefaults.colors(
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color(0xFFF3F3F3),
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                            singleLine = true
+                        )
                     }
                     // Teléfono
                     Column {

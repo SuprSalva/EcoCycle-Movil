@@ -14,5 +14,6 @@ data class UsuarioResponse(
     val nivelActual: String?,
     val metaActual: Int?,
     val faltantesSiguienteNivel: Int?,
-    val rol: String?
+    val rol: String?,
+    val avatarUrl: String?
 )

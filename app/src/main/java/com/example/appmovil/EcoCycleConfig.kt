@@ -5,11 +5,7 @@ package com.example.appmovil
 
 object EcoCycleConfig {
     const val MACHINE_ID = "machine_001"
-    const val SERVER_HOST = "104.248.187.43"
-    const val VISOR_PORT = 3000
+    const val SERVER_HOST = "10.43.13.239"
     const val NET_API_PORT = 5000
-    const val VISOR_URL_HTTPS = "https://ecocyclemx.tech/visor"
-    const val NET_API_URL_HTTPS = "https://ecocyclemx.tech/api"
-    val VISOR_URL: String get() = "http://${SERVER_HOST}:${VISOR_PORT}"
-    val NET_API_URL: String get() = "http://${SERVER_HOST}:${NET_API_PORT}/api"
+    val BASE_URL: String get() = "http://${SERVER_HOST}:${NET_API_PORT}/"
 }

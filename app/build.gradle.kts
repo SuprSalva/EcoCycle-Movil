@@ -78,13 +78,13 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.database)
-
+    implementation(libs.firebase.firestore)
+    // ML Kit Barcode Scanning
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
     // Google Sign In
     implementation(libs.play.services.auth)
-
     implementation(libs.coil.compose)
     implementation(libs.mlkit.barcode.scanning)
-
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

@@ -5,13 +5,13 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val PrimaryColor = Color(0xFF0D631B)
+val PrimaryColor = Color(0xFF20B034) // Exact green from logofinalpng.png
 val OnPrimaryColor = Color(0xFFFFFFFF)
-val PrimaryContainerColor = Color(0xFF2E7D32)
-val OnPrimaryContainerColor = Color(0xFFCBFFC2)
-val SecondaryColor = Color(0xFF3C6842)
-val SecondaryContainerColor = Color(0xFFBDEFBE)
-val OnSecondaryContainerColor = Color(0xFF426E47)
+val PrimaryContainerColor = Color(0xFF86EFAC) // Lighter green
+val OnPrimaryContainerColor = Color(0xFF064E3B)
+val SecondaryColor = Color(0xFF4ADE80)
+val SecondaryContainerColor = Color(0xFFDCFCE7)
+val OnSecondaryContainerColor = Color(0xFF14532D)
 val BackgroundColor = Color(0xFFF9F9F9)
 val OnBackgroundColor = Color(0xFF1A1C1C)
 val SurfaceColor = Color(0xFFFFFFFF) // surface-container-lowest

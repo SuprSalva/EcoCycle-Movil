@@ -1,6 +1,9 @@
 package com.example.appmovil.ui.navigation
 
+import android.app.Activity
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
@@ -23,6 +26,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.appmovil.QrActivity
 import com.example.appmovil.ui.screens.DashboardScreen
+import com.example.appmovil.ui.screens.SesionActivaScreen
 import com.example.appmovil.ui.screens.HistorialScreen
 import com.example.appmovil.ui.screens.MenuScreen
 import com.example.appmovil.ui.screens.RecompensasScreen
@@ -35,6 +39,15 @@ import com.example.appmovil.ui.screens.NotificacionesScreen
 fun AppNavigation(onLogout: () -> Unit) {
     val navController = rememberNavController()
     val context = LocalContext.current
+
+    val qrLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val sessionId = result.data?.getStringExtra("session_id")
+            if (sessionId != null) {
+                navController.navigate("sesion_activa/$sessionId")
+            }
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -65,8 +78,7 @@ fun AppNavigation(onLogout: () -> Unit) {
                         label = { Text("Escanear") },
                         selected = false,
                         onClick = {
-                            val intent = Intent(context, QrActivity::class.java)
-                            context.startActivity(intent)
+                            qrLauncher.launch(Intent(context, QrActivity::class.java))
                         }
                     )
 
@@ -146,6 +158,17 @@ fun AppNavigation(onLogout: () -> Unit) {
             }
             composable("notificaciones") {
                 NotificacionesScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable("sesion_activa/{sessionId}") { backStackEntry ->
+                val sessionId = backStackEntry.arguments?.getString("sessionId") ?: ""
+                SesionActivaScreen(
+                    sessionId = sessionId,
+                    onBackClick = { 
+                        navController.navigate("dashboard") {
+                            popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                        }
+                    }
+                )
             }
         }
     }
